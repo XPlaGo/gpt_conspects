@@ -24,7 +24,7 @@ print("pdf was converted...")
 path_to_tesseract = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 pytesseract.tesseract_cmd = path_to_tesseract
 tessdata_dir_config = r'--tessdata-dir "C:\Program Files\Tesseract-OCR\tessdata"'
-openai.api_key = "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"  # my private api key ... ok, you can use it)
+openai.api_key = "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"  # my private api key ... ok, you can use it)
 model_engine = "text-davinci-003"
 
 print("starting text recognition...")
@@ -57,15 +57,25 @@ def image_recognition(image):
 
 
 with open(out_filename, "w", encoding="utf-8") as file:
-    for (i, image) in enumerate(images):
-        print(str(first_page + i) + " page converting")
-        text = image_recognition(image)
-        print(" -- completed")
-        req = "Сделай конспект по тексту:\n \"" + str(text) + "\""
-        res = request_chatgpt(req)
-        file.write("\n\n" + str({i + first_page}) + ":\n\n")
-        file.write(str(res))
-        file.flush()
-        print(" -- done")
+    with open("full.txt", "w", encoding="utf-8") as full:
+        for (i, image) in enumerate(images):
+            print(str(first_page + i) + " page converting")
+            text = image_recognition(image)
+            full.write("\n\n" + str({i + first_page}) + ":\n\n")
+            full.write(str(text))
+            print(" -- completed")
+            req = "Сделай конспект по тексту:\n \"" + str(text) + "\""
+            res = request_chatgpt(req)
+            file.write("\n\n" + str({i + first_page}) + ":\n\n")
+            file.write(str(res))
+            file.flush()
+            print(" -- done")
 
 file.close()
+
+r"""
+241
+248
+example\obsch11.pdf
+example\22.txt
+"""
